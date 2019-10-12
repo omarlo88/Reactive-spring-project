@@ -34,10 +34,11 @@ public class ReactiveSpringProjectApplication {
             departementRepository.deleteAll()
                     .thenMany(
                             Flux.just("Informatique", "RH", "Juridique", "Compta", "R&D", "Logistique")
-                            .map(name -> new Departement(null, name, null, null))
-                            .flatMap(departementRepository::save))
+                                    .map(name -> new Departement(null, name, null, null))
+                                    .flatMap(departementRepository::save))
                     .thenMany(departementRepository.findAll())
                     .subscribe(System.out::println);
+                    //.log();
 
             fonctionRepository.deleteAll()
                     .thenMany(

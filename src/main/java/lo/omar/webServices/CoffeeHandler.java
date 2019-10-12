@@ -32,15 +32,16 @@ public class CoffeeHandler {
                 .flatMap(coffee -> ServerResponse.ok().body(BodyInserters.fromPublisher(coffeeMono, Coffee.class)))
                 .switchIfEmpty(ServerResponse.notFound().build());*/
 
-        return ServerResponse.ok().body(coffeeService.getCoffee(request.pathVariable("id")), Coffee.class)
-                .switchIfEmpty(ServerResponse.notFound().build());
-
-        /*return coffeeService.getCoffee(request.pathVariable("id"))
-                .flatMap(coffee -> ServerResponse.ok().body(BodyInserters.fromObject(coffee)))
+        /*return ServerResponse.ok().body(coffeeService.getCoffee(request.pathVariable("id")), Coffee.class)
                 .switchIfEmpty(ServerResponse.notFound().build());*/
+
+        return coffeeService.getCoffee(request.pathVariable("id"))
+                .flatMap(coffee -> ServerResponse.ok().body(BodyInserters.fromObject(coffee)))
+                .switchIfEmpty(ServerResponse.notFound().build());
     }
 
     public Mono<ServerResponse> deleteCoffe(ServerRequest request){
+
         return ServerResponse.noContent().build(coffeeService.deleteCoffee(request.pathVariable("id")))
                 .switchIfEmpty(ServerResponse.notFound().build());
     }
@@ -72,7 +73,7 @@ public class CoffeeHandler {
     }
 
     public Mono<ServerResponse> getCoffeeOrdres(ServerRequest request){
-        return ServerResponse.ok().contentType(MediaType.TEXT_EVENT_STREAM)
+        return ServerResponse.ok().contentType(MediaType.APPLICATION_STREAM_JSON)
                 .body(coffeeService.getCoffeeOrders(request.pathVariable("id")), CoffeeOrder.class)
                 .switchIfEmpty(ServerResponse.notFound().build());
     }

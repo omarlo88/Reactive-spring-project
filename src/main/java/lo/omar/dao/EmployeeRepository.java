@@ -21,7 +21,7 @@ public interface EmployeeRepository extends ReactiveMongoRepository<Employee, St
     Flux<Employee> getAllBySalaireEquals(Double salaire);
     Flux<Employee> getAllBySalaireLessThan(Double salaire);
     Flux<Employee> getAllBySalaireGreaterThan(Double salaire);
-    Flux<Employee> getByNomAndAndPrenomAllIgnoreCaseOrderByNom(String nom, String prenom);
+    Flux<Employee> getAllByNomAndAndPrenomAllIgnoreCaseOrderByNom(String nom, String prenom);
     Mono<Employee> getByEmail(String email);
     //@Tailable //Ce cursor reste toujours ouvert
     //Flux<Employee> findAllBy();
