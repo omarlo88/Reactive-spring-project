@@ -36,7 +36,7 @@ public class RouterCoffeConfig {
                         }*/)
                         .DELETE("/{id}", handler::deleteCoffe)
                         .nest(accept(APPLICATION_JSON), builder1 -> builder1
-                                .POST("/", handler::saveCoffee)
+                                .POST("/", handler::saveCoffee2)
                                 .PUT("/{id}", handler::updateCoffee))
                 )
                 .build();

@@ -8,6 +8,7 @@ import lombok.ToString;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -19,5 +20,5 @@ public class Fonction {
     private String nom;
     @DBRef
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private List<Employee> employees;
+    private List<Employee> employees = new ArrayList<>();
 }

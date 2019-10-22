@@ -46,6 +46,17 @@ public class CoffeeHandler {
                 .switchIfEmpty(ServerResponse.notFound().build());
     }
 
+    public Mono<ServerResponse> saveCoffee2(ServerRequest request){
+
+        /*return coffeeService.saveCoffe(request.bodyToMono(Coffee.class))
+                .flatMap(coffee -> ServerResponse.ok().body(BodyInserters.fromObject(coffee)));*/
+
+        return ServerResponse.ok().body(
+                request.bodyToMono(Coffee.class)
+                .flatMap(coffeeService::saveCoffee), Coffee.class
+        );
+    }
+
     public Mono<ServerResponse> saveCoffee(ServerRequest request){
 
         /*return coffeeService.saveCoffe(request.bodyToMono(Coffee.class))
@@ -55,19 +66,20 @@ public class CoffeeHandler {
                 coffeeService.saveCoffee(request.bodyToMono(Coffee.class)), Coffee.class);
     }
 
-    public Mono<ServerResponse> updateCoffee(ServerRequest request){
+    public Mono<ServerResponse> updateCoffee(ServerRequest request) {
         String id = request.pathVariable("id");
         Mono<Coffee> coffeeNew = request.bodyToMono(Coffee.class);
         return coffeeService.getCoffee(id)
                 .flatMap(coffeeOld -> ServerResponse.ok().body(
-                        BodyInserters.fromPublisher(coffeeNew
-                                //.map(coffee -> new Coffee(id, coffee.getCoffeeName()))
-                                .map(coffee -> {
-                                    coffeeOld.setCoffeeName(coffee.getCoffeeName());
-                                    return coffeeOld;
-                                })
-                                .flatMap(coffeeService::updateCoffee)
-                                , Coffee.class)
+                        BodyInserters.fromPublisher(
+                                coffeeNew
+                                        //.map(coffee -> new Coffee(id, coffee.getCoffeeName()))
+                                        .map(coffee -> {
+                                            coffeeOld.setCoffeeName(coffee.getCoffeeName());
+                                            return coffeeOld;
+                                        })
+                                        .flatMap(coffeeService::updateCoffee),
+                                Coffee.class)
                 ))
                 .switchIfEmpty(ServerResponse.notFound().build());
     }

@@ -9,6 +9,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -24,5 +25,5 @@ public class Departement {
     private Employee chef;
     @DBRef
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private List<Employee> employees;
+    private List<Employee> employees = new ArrayList<>();
 }

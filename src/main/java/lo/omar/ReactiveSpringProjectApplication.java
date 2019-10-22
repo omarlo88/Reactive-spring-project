@@ -8,6 +8,8 @@ import lo.omar.entities.Coffee;
 import lo.omar.entities.Departement;
 import lo.omar.entities.Employee;
 import lo.omar.entities.Fonction;
+import lo.omar.entitiesBoutique.Categorie;
+import lo.omar.servicesBoutique.CategorieImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -27,7 +29,7 @@ public class ReactiveSpringProjectApplication {
         SpringApplication.run(ReactiveSpringProjectApplication.class, args);
     }
 
-    @Bean
+    /*@Bean
     CommandLineRunner initData(DepartementRepository departementRepository, FonctionRepository fonctionRepository,
                                EmployeeRepository employeeRepository, CoffeeRepository coffeeRepository){
         return args -> {
@@ -80,6 +82,20 @@ public class ReactiveSpringProjectApplication {
                     ).thenMany(coffeeRepository.findAll())
                     .subscribe(System.out::println);
 
+        };
+
+    }*/
+
+    @Bean
+    CommandLineRunner initData(CategorieImpl categorie){
+        return args -> {
+            categorie.deleteAll()
+                    .thenMany(Flux.just("Électroniques", "Électroménagère", "Alimentation", "Restaurant")
+                            .map(text -> new Categorie(null, text))
+                            .flatMap(categorie::saveEntity)
+                    )
+                    .thenMany(categorie.getAll())
+                    .subscribe(System.out::println);
         };
 
     }

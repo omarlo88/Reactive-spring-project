@@ -39,6 +39,10 @@ public class CoffeeService {
         return coffeeMono.flatMap(coffeeRepository::save);
     }
 
+    public Mono<Coffee> saveCoffee(Coffee coffee){
+        return coffeeRepository.save(coffee);
+    }
+
     public Mono<Coffee> updateCoffee(Coffee coffee){
         return coffeeRepository.save(coffee);
     }
