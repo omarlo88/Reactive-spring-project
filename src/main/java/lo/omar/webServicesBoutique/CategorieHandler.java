@@ -53,7 +53,8 @@ public class CategorieHandler {
     }
 
     public Mono<ServerResponse> deleteCategorie(ServerRequest request){
-        return ServerResponse.noContent().build(categorie.deleteById(request.pathVariable("id")))
+        return categorie.getById(request.pathVariable("id"))
+                .flatMap(c -> ServerResponse.ok().build(categorie.deleteById(c.getId())))
                 .switchIfEmpty(ServerResponse.notFound().build());
     }
 }

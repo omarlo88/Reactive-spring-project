@@ -34,7 +34,8 @@ public class ProduitHandler {
     }
 
     public Mono<ServerResponse> getProduitsByNom(ServerRequest request){
-        return ServerResponse.ok().body(produit.getProduitsByNom(request.pathVariable("idCat")), Produit.class)
+        String nom = request.queryParam("nom").orElse("");
+        return ServerResponse.ok().body(produit.getProduitsByNom(nom), Produit.class)
                 .switchIfEmpty(ServerResponse.notFound().build());
     }
 
@@ -61,7 +62,8 @@ public class ProduitHandler {
     public Mono<ServerResponse> saveProduit(ServerRequest request){
         return ServerResponse.ok().body(
                 request.bodyToMono(Produit.class)
-                .flatMap(produit::saveEntity), Produit.class);
+                .flatMap(produit::saveEntity), Produit.class)
+                .switchIfEmpty(ServerResponse.notFound().build());
     }
 
     public Mono<ServerResponse> updateProduit(ServerRequest request){
@@ -90,7 +92,12 @@ public class ProduitHandler {
     }
 
     public Mono<ServerResponse> deleteProduit(ServerRequest request){
-        return ServerResponse.noContent().build(produit.deleteById(request.pathVariable("id")))
+
+        /*return ServerResponse.noContent().build(produit.deleteById(request.pathVariable("id")))
+                .switchIfEmpty(ServerResponse.notFound().build());*/
+
+        return produit.getById(request.pathVariable("id"))
+                .flatMap(produit1 -> ServerResponse.ok().build(produit.deleteById(produit1.getId())))
                 .switchIfEmpty(ServerResponse.notFound().build());
     }
 }

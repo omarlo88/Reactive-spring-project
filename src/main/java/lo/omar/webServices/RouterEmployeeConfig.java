@@ -16,6 +16,7 @@ public class RouterEmployeeConfig {
                         .GET("/{id}", handler::getEmployee)
                         .GET("/byEmail/{email}", handler::getEmployeeByEmail)
                         .GET("/byDepartement/{id}", handler::getEmployeesByDepartement)
+                        .DELETE("/employees/{id}", handler::deleteEmployee)
                 )
                 .build();
     }

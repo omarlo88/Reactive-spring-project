@@ -42,7 +42,11 @@ public class CoffeeHandler {
 
     public Mono<ServerResponse> deleteCoffe(ServerRequest request){
 
-        return ServerResponse.noContent().build(coffeeService.deleteCoffee(request.pathVariable("id")))
+        /*return ServerResponse.noContent().build(coffeeService.deleteCoffee(request.pathVariable("id")))
+                .switchIfEmpty(ServerResponse.notFound().build());*/
+
+        return coffeeService.getCoffee(request.pathVariable("id"))
+                .flatMap(c -> ServerResponse.ok().build(coffeeService.deleteCoffee(c.getId())))
                 .switchIfEmpty(ServerResponse.notFound().build());
     }
 

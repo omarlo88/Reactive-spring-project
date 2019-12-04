@@ -61,7 +61,8 @@ public class SousCategorieHandler {
     }
 
     public Mono<ServerResponse> deleteSousCategorie(ServerRequest request){
-        return ServerResponse.noContent().build(sousCategorie.deleteById(request.pathVariable("id")))
+        return sousCategorie.getById(request.pathVariable("id"))
+                .flatMap(sousCat -> ServerResponse.ok().build(sousCategorie.deleteById(sousCat.getId())))
                 .switchIfEmpty(ServerResponse.notFound().build());
     }
 

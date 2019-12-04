@@ -83,7 +83,8 @@ public class CommandeProduitHandler {
     }
 
     public Mono<ServerResponse> deleteCommandeProduit(ServerRequest request){
-        return ServerResponse.noContent().build(commandeProduit.deleteById(request.pathVariable("id")))
+        return commandeProduit.getById(request.pathVariable("id"))
+                .flatMap(c -> ServerResponse.ok().build(commandeProduit.deleteById(c.getId())))
                 .switchIfEmpty(ServerResponse.notFound().build());
     }
 }

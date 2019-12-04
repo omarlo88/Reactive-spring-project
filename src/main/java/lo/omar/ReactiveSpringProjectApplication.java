@@ -9,16 +9,27 @@ import lo.omar.entities.Departement;
 import lo.omar.entities.Employee;
 import lo.omar.entities.Fonction;
 import lo.omar.entitiesBoutique.Categorie;
+import lo.omar.entitiesBoutique.CommandeProduit;
+import lo.omar.entitiesBoutique.Produit;
+import lo.omar.entitiesBoutique.SousCategorie;
 import lo.omar.servicesBoutique.CategorieImpl;
+import lo.omar.servicesBoutique.CommandeProduitImpl;
+import lo.omar.servicesBoutique.ProduitImpl;
+import lo.omar.servicesBoutique.SousCategorieImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.reactive.CorsWebFilter;
+import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.UUID;
 
 @SpringBootApplication
@@ -28,6 +39,27 @@ public class ReactiveSpringProjectApplication {
     public static void main(String[] args) {
         SpringApplication.run(ReactiveSpringProjectApplication.class, args);
     }
+
+    /*@Bean
+    CorsWebFilter corsFilter() {
+
+        CorsConfiguration config = new CorsConfiguration();
+
+        // Possibly...
+        // config.applyPermitDefaultValues()
+
+        config.setAllowCredentials(true);
+        // allow access to my dev Angular instance
+        config.addAllowedOrigin("http://localhost:4200");
+        config.addAllowedHeader("*");
+        config.addAllowedMethod("*");
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+
+        return new CorsWebFilter(source);
+    }*/
+
 
     /*@Bean
     CommandLineRunner initData(DepartementRepository departementRepository, FonctionRepository fonctionRepository,
@@ -87,17 +119,60 @@ public class ReactiveSpringProjectApplication {
     }*/
 
     @Bean
-    CommandLineRunner initData(CategorieImpl categorie){
+    CommandLineRunner initData(CategorieImpl categorie, SousCategorieImpl sousCategorie,
+                               CommandeProduitImpl commandeProduit, ProduitImpl produit){
         return args -> {
             categorie.deleteAll()
-                    .thenMany(Flux.just("Électroniques", "Électroménagère", "Alimentation", "Restaurant")
+                    .thenMany(Flux.just("Électroniques", "Électroménagère", "Alimentation", "Restaurant", "Autres")
                             .map(text -> new Categorie(null, text))
                             .flatMap(categorie::saveEntity)
                     )
                     .thenMany(categorie.getAll())
                     .subscribe(System.out::println);
+
+
+            sousCategorie.deleteAll()
+                    .thenMany(Flux.just("Apple", "Windows", "Autres")
+                            .map(text -> new SousCategorie(null, null, text))
+                            .flatMap(sousCategorie::saveEntity)
+                    )
+                    .thenMany(sousCategorie.getAll())
+                    .subscribe(System.out::println);
+
+
+            commandeProduit.deleteAll()
+                    .thenMany(Flux.just("Encours de validation", "Validée", "En préparation pour livraison", "Livrée")
+                            .map(text -> new CommandeProduit(null, null, text, LocalDateTime.now()))
+                            .flatMap(commandeProduit::saveEntity)
+                    )
+                    .thenMany(commandeProduit.getAll())
+                    .subscribe(System.out::println);
+
+
+            produit.deleteAll()
+                    .thenMany(Flux.interval(Duration.ofSeconds(1))
+                            .take(11)
+                            .map(i -> i.intValue() + 1)
+                            .map(i -> {
+                                Produit p = new Produit();
+                                p.setId(UUID.randomUUID().toString());
+                                p.setNom("Produit " + i);
+                                p.setDescription("Produit test il faut changer le nom");
+                                p.setPrix(i + 1.50);
+                                p.setRabais(0.7);
+                                if (i % 3 == 0) {
+                                    p.setStatut("promo");
+                                    p.setPromotion(true);
+                                }
+                                p.setImage(i.toString());
+                                return p;
+                            })
+                            .flatMap(produit::saveEntity)
+                    )
+                    .thenMany(produit.getAll())
+                    .subscribe(System.out::println);
+
         };
 
     }
-
 }

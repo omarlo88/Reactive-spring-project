@@ -36,23 +36,23 @@ public class ProduitImpl implements ICrudService<Produit, String>, ICrudAddAndRe
     }
 */
    public Flux<Produit> getProduitsByCategorieId(String id){
-       return produitRepository.findAllByCategorieIdsContainsOrderByPrixDesc(id);
+       return produitRepository.findAllByCategorieIdsContainsOrderByPrixAsc(id);
    }
 
     public Flux<Produit> getProduitsByNom(String nom){
-        return produitRepository.findAllByNomLikeOrderByPrixDesc(nom);
+        return produitRepository.findAllByNomLikeIgnoreCaseOrderByPrixAsc(nom);
     }
 
     public Flux<Produit> getProduitsByPrix(double prix){
-        return produitRepository.findAllByPrixOrderByPrixDesc(prix);
+        return produitRepository.findAllByPrixOrderByPrixAsc(prix);
     }
 
     public Flux<Produit> getProduitsByPrixBetween(double prix1, double prix2){
-        return produitRepository.findAllByPrixBetweenOrderByPrixDesc(prix1, prix2);
+        return produitRepository.findAllByPrixBetweenOrderByPrixAsc(prix1, prix2);
     }
 
     public Flux<Produit> getProduitsByPromotion(String promotion){
-        return produitRepository.findAllByPromotionOrderByPrixDesc(promotion);
+        return produitRepository.findAllByPromotionOrderByPrixAsc(promotion);
     }
 
     @Override

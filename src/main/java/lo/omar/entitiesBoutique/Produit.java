@@ -27,4 +27,5 @@ public class Produit {
     private String statut;
     private boolean promotion;
     private double rabais;
+    private boolean available;
 }

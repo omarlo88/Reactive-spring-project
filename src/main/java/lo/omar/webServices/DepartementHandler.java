@@ -79,7 +79,12 @@ public class DepartementHandler {
     }
 
     public Mono<ServerResponse> deleteDepartement(ServerRequest request){
-        return ServerResponse.noContent().build(departementRepository.deleteById(request.pathVariable("id")))
+        /*return ServerResponse.noContent().build(departementRepository.deleteById(request.pathVariable("id")))
+                .switchIfEmpty(ServerResponse.notFound().build());*/
+
+        return departementRepository.findById(request.pathVariable("id"))
+                //.flatMap(d -> ServerResponse.ok().build(departementRepository.delete(d)))
+                .flatMap(d -> ServerResponse.ok().build(departementRepository.deleteById(d.getId())))
                 .switchIfEmpty(ServerResponse.notFound().build());
     }
 
