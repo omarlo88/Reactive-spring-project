@@ -1,24 +1,21 @@
 package lo.omar.webServices;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.http.MediaType.TEXT_EVENT_STREAM;
+import static org.springframework.web.reactive.function.server.RequestPredicates.accept;
+import static org.springframework.web.reactive.function.server.RequestPredicates.contentType;
+import static org.springframework.web.reactive.function.server.RouterFunctions.route;
+
 import lo.omar.dao.DepartementRepository;
 import lo.omar.entities.Departement;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.BodyInserters;
-import org.springframework.web.reactive.function.server.*;
+import org.springframework.web.reactive.function.server.RouterFunction;
+import org.springframework.web.reactive.function.server.RouterFunctions;
+import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
-
-import java.time.Duration;
-
-import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.http.MediaType.TEXT_EVENT_STREAM;
-import static org.springframework.web.reactive.function.BodyInserters.fromPublisher;
-import static org.springframework.web.reactive.function.server.RequestPredicates.*;
-import static org.springframework.web.reactive.function.server.RequestPredicates.accept;
-import static org.springframework.web.reactive.function.server.RequestPredicates.pathPredicates;
-import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
 @Configuration
 public class RouterConfig {
@@ -140,7 +137,8 @@ public class RouterConfig {
                                                     .switchIfEmpty(ServerResponse.notFound().build());*/
 
                                     return departementRepository.findById(id)
-                                            .flatMap(dt -> ServerResponse.ok().body(BodyInserters.fromObject(dt)))
+                                        .flatMap(dt -> ServerResponse.ok()
+                                            .body(BodyInserters.fromValue(dt)))
                                             .switchIfEmpty(ServerResponse.notFound().build());
                                 })
                                 .POST("/", serverRequest -> {

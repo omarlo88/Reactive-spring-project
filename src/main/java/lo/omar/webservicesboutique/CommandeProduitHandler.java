@@ -1,5 +1,6 @@
-package lo.omar.webServicesBoutique;
+package lo.omar.webservicesboutique;
 
+import java.time.LocalDateTime;
 import lo.omar.entitiesBoutique.CommandeProduit;
 import lo.omar.servicesBoutique.CommandeProduitImpl;
 import org.springframework.stereotype.Component;
@@ -7,8 +8,6 @@ import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
-
-import java.time.LocalDateTime;
 
 @Component
 public class CommandeProduitHandler {
@@ -26,7 +25,7 @@ public class CommandeProduitHandler {
 
     public Mono<ServerResponse> getCommandesProduit(ServerRequest request){
         return commandeProduit.getById(request.pathVariable("id"))
-                .flatMap(c -> ServerResponse.ok().body(BodyInserters.fromObject(c)))
+            .flatMap(c -> ServerResponse.ok().body(BodyInserters.fromValue(c)))
                 .switchIfEmpty(ServerResponse.notFound().build());
     }
 

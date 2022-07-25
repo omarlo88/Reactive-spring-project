@@ -1,4 +1,4 @@
-package lo.omar.webServicesBoutique;
+package lo.omar.webservicesboutique;
 
 import lo.omar.entitiesBoutique.Categorie;
 import lo.omar.servicesBoutique.CategorieImpl;
@@ -25,7 +25,7 @@ public class CategorieHandler {
 
     public Mono<ServerResponse> getCategorie(ServerRequest request){
         return categorie.getById(request.pathVariable("id"))
-                .flatMap(cat -> ServerResponse.ok().body(BodyInserters.fromObject(cat)))
+            .flatMap(cat -> ServerResponse.ok().body(BodyInserters.fromValue(cat)))
                 .switchIfEmpty(ServerResponse.notFound().build());
     }
 

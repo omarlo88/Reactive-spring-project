@@ -1,21 +1,16 @@
 package lo.omar.webServices;
 
+import static org.springframework.web.reactive.function.BodyInserters.fromValue;
+
 import lo.omar.dao.DepartementRepository;
 import lo.omar.entities.Departement;
-import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.BodyInserter;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import java.time.Duration;
-
-import static org.springframework.web.reactive.function.BodyInserters.fromObject;
 
 @Component
 @Slf4j
@@ -42,14 +37,14 @@ public class DepartementHandler {
     public Mono<ServerResponse> getDepartement(ServerRequest serverRequest){
         String id = serverRequest.pathVariable("id");
         return departementRepository.findById(id)
-                .flatMap(departement -> ServerResponse.ok().body(fromObject(departement)))
+            .flatMap(departement -> ServerResponse.ok().body(fromValue(departement)))
                 .switchIfEmpty(ServerResponse.notFound().build());
     }
 
     public Mono<ServerResponse> rechercherDepartementByQuery(ServerRequest request){
         String nom = request.queryParam("nom").orElseThrow(RuntimeException::new);
         return departementRepository.getByNom(nom)
-                .flatMap(departement -> ServerResponse.ok().body(fromObject(departement)))
+            .flatMap(departement -> ServerResponse.ok().body(fromValue(departement)))
                 .switchIfEmpty(ServerResponse.notFound().build());
     }
 

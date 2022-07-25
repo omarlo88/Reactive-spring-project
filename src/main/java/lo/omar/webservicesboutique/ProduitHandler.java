@@ -1,4 +1,4 @@
-package lo.omar.webServicesBoutique;
+package lo.omar.webservicesboutique;
 
 import lo.omar.entitiesBoutique.Produit;
 import lo.omar.servicesBoutique.ProduitImpl;
@@ -24,7 +24,7 @@ public class ProduitHandler {
 
     public Mono<ServerResponse> getProduit(ServerRequest request){
         return produit.getById(request.pathVariable("id"))
-                .flatMap(p -> ServerResponse.ok().body(BodyInserters.fromObject(p)))
+            .flatMap(p -> ServerResponse.ok().body(BodyInserters.fromValue(p)))
                 .switchIfEmpty(ServerResponse.notFound().build());
     }
 

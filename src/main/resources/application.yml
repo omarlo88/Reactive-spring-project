@@ -1,0 +1,9 @@
+server:
+  port: 9090
+
+keycloak:
+  realm: SpringBootKeycloak
+  auth-server-url: http://localhost:8080/
+  resource: login-app
+  public-client: true
+  bearer-only: true

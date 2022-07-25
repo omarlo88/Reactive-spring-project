@@ -28,7 +28,7 @@ public class EmployeeHandler {
     public Mono<ServerResponse> getEmployee(ServerRequest request) {
         //return ServerResponse.ok().body(employeeRepository.findById(request.pathVariable("id")), Employee.class);
         return employeeRepository.findById(request.pathVariable("id"))
-                .flatMap(employee -> ServerResponse.ok().body(BodyInserters.fromObject(employee)))
+            .flatMap(employee -> ServerResponse.ok().body(BodyInserters.fromValue(employee)))
                 .switchIfEmpty(ServerResponse.notFound().build());
     }
 
